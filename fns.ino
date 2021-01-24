@@ -1,6 +1,6 @@
-// do lores images on a neopixel matrix
-
 #include <string.h>
+
+#define MQTT_TOPIC_PREFIX "effects/"
 
 #define BOARD_WIDTH 15
 #define BOARD_HEIGHT 10
@@ -35,8 +35,6 @@ char * set_node_id(const char * mac_address)
   *p++ = '\0';
   return node_id;
 }
-
-#define MQTT_TOPIC_PREFIX "effect/"
 
 char *make_topic(char *dest, int dest_bytes, const char *suffix)
 {

@@ -1,4 +1,4 @@
-#include "dolores.ino"
+#include "fns.ino"
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
@@ -25,9 +25,10 @@ static int test_set_node_id()
 static int test_make_topic()
 {
   char topic[sizeof sizeof(MQTT_TOPIC_PREFIX) + sizeof(node_id) + 11];
-  assert(! strcmp("effect/0123456789ab/mytopic",
+  puts(make_topic(topic, sizeof topic, "/mytopic"));
+  assert(! strcmp("effects/0123456789ab/mytopic",
 		  make_topic(topic, sizeof topic, "/mytopic")));
-  assert(! strcmp("effect/0123456789ab/supercalif",
+  assert(! strcmp("effects/0123456789ab/supercalif",
 		  make_topic(topic, sizeof topic, "/supercalifragilisticexpialidocious")));
 }
 
