@@ -5,6 +5,9 @@
 #define BOARD_WIDTH 15
 #define BOARD_HEIGHT 10
 
+#define STRIP_LENGTH (BOARD_WIDTH * BOARD_HEIGHT)
+#define PAYLOAD_LENGTH (STRIP_LENGTH * 3)
+
 int xy_to_index(int x, int y)
 {
   // alternate rows are wired "backwards", thus:
@@ -45,4 +48,22 @@ char *make_topic(char *dest, int dest_bytes, const char *suffix)
   strncat(topic, suffix, dest_bytes - prefix_length);
   topic[dest_bytes - 1] = '\0';
   return topic;
+}
+
+struct led { uint8_t r,g,b ; } leds[STRIP_LENGTH];
+
+struct led * set_strip(byte *payload, int payload_size, struct led *leds) {
+  int loc = 0;
+  for(int i=0; i < STRIP_LENGTH *3; loc++, i+=3) {
+    if(i + 2 < payload_size) {
+      leds[loc].r = payload[i];
+      leds[loc].g = payload[i+1];
+      leds[loc].b = payload[i+2];
+    } else {
+      leds[loc].r = 0;
+      leds[loc].g = 0;
+      leds[loc].b = 0;
+    }
+  }
+  return leds;
 }
