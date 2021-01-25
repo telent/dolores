@@ -52,7 +52,7 @@ char *make_topic(char *dest, int dest_bytes, const char *suffix)
 
 struct led { uint8_t r,g,b ; } leds[STRIP_LENGTH];
 
-struct led * set_strip(byte *payload, int payload_size, struct led *leds) {
+struct led * set_led_values(byte *payload, int payload_size, struct led *leds) {
   int loc = 0;
   for(int i=0; i < STRIP_LENGTH *3; loc++, i+=3) {
     if(i + 2 < payload_size) {

@@ -27,14 +27,14 @@ static void test_set_node_id()
 static void test_make_topic()
 {
   char topic[sizeof sizeof(MQTT_TOPIC_PREFIX) + sizeof(node_id) + 11];
-  puts(make_topic(topic, sizeof topic, "/mytopic"));
+
   assert(! strcmp("effects/0123456789ab/mytopic",
 		  make_topic(topic, sizeof topic, "/mytopic")));
   assert(! strcmp("effects/0123456789ab/supercali",
 		  make_topic(topic, sizeof topic, "/supercalifragilisticexpialidocious")));
 }
 
-static void test_set_strip()
+static void test_set_led_values()
 {
   struct led leds[STRIP_LENGTH] = {
     {1,1,1},
@@ -56,7 +56,7 @@ static void test_set_strip()
     1,1,1,
     67,68,69,
   };
-  set_strip(payload, sizeof payload, leds);
+  set_led_values(payload, sizeof payload, leds);
 
   // check data in payload is copied to strip
   assert(leds[2].r==7);
@@ -74,7 +74,7 @@ static void test_set_strip()
   int big_payload_size = sizeof (byte) * STRIP_LENGTH * 4 + 25;
   byte * payload2 = malloc(big_payload_size);
   memset(payload2, 42, big_payload_size);
-  set_strip(payload2, big_payload_size, leds);
+  set_led_values(payload2, big_payload_size, leds);
   assert(canary==0xdeadcafe);
 }
 
@@ -82,5 +82,5 @@ int main() {
   test_xy_to_index();
   test_set_node_id();
   test_make_topic();
-  test_set_strip();
+  test_set_led_values();
 }
