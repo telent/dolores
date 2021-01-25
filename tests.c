@@ -28,7 +28,7 @@ static void test_make_topic()
   puts(make_topic(topic, sizeof topic, "/mytopic"));
   assert(! strcmp("effects/0123456789ab/mytopic",
 		  make_topic(topic, sizeof topic, "/mytopic")));
-  assert(! strcmp("effects/0123456789ab/supercalif",
+  assert(! strcmp("effects/0123456789ab/supercali",
 		  make_topic(topic, sizeof topic, "/supercalifragilisticexpialidocious")));
 }
 
