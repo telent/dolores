@@ -1,8 +1,7 @@
 default: tests
 
-tests.o: tests.c $(wildcard *.ino)
+tests: fns.o tests.o
+test: tests
+	./tests
 
 install:
-
-test:
-	./tests

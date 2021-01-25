@@ -1,12 +1,12 @@
 typedef unsigned char uint8_t;
 typedef unsigned char byte;
 
-#include "fns.ino"
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
+#include "dolores.h"
 
 static void test_xy_to_index()
 {
@@ -72,7 +72,7 @@ static void test_set_led_values()
 
   // check we limit at STRIP_LENGTH if payload is mahoosive
   int big_payload_size = sizeof (byte) * STRIP_LENGTH * 4 + 25;
-  byte * payload2 = malloc(big_payload_size);
+  byte * payload2 = (byte *) malloc(big_payload_size);
   memset(payload2, 42, big_payload_size);
   set_led_values(payload2, big_payload_size, leds);
   assert(canary==0xdeadcafe);

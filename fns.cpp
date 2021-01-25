@@ -1,12 +1,6 @@
 #include <string.h>
 
-#define MQTT_TOPIC_PREFIX "effects/"
-
-#define BOARD_WIDTH 15
-#define BOARD_HEIGHT 10
-
-#define STRIP_LENGTH (BOARD_WIDTH * BOARD_HEIGHT)
-#define PAYLOAD_LENGTH (STRIP_LENGTH * 3)
+#include "dolores.h"
 
 int xy_to_index(int x, int y)
 {
@@ -25,7 +19,7 @@ int xy_to_index(int x, int y)
   }
 }
 
-char node_id[12] = "000000000000";
+char node_id[13] = "000000000000";
 
 char * set_node_id(const char * mac_address)
 {
@@ -50,7 +44,7 @@ char *make_topic(char *dest, int dest_bytes, const char *suffix)
   return topic;
 }
 
-struct led { uint8_t r,g,b ; } leds[STRIP_LENGTH];
+struct led leds[STRIP_LENGTH];
 
 struct led * set_led_values(byte *payload, int payload_size, struct led *leds) {
   int loc = 0;
