@@ -58,6 +58,7 @@ void mqtt_receive_cb(char* topic, byte* payload, unsigned int length) {
     Serial.print((int)payload[i]);
     Serial.print(" ");
   }
+  Serial.println("");
 
   set_led_values(payload, length, leds);
   digitalWrite(BUILTIN_LED, HIGH);
@@ -109,11 +110,11 @@ void setup() {
   set_led_values(0, 0, leds);
   update_strip_from_leds(leds);
   digitalWrite(BUILTIN_LED, HIGH);
+  mqttReconnect();
 }
 
 void loop() {
-  mqttReconnect();
-  mqttClient.loop();
-
+  if(!mqttClient.loop()) mqttReconnect();
   strip.show();
+  yield();
 }
