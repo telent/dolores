@@ -75,16 +75,17 @@ void update_strip_from_leds(led *leds) {
 
 #define TOPIC_PREFIX "effects/"
 void mqttReconnect() {
+  char topic[80];
   // Loop until we're reconnected
   while (!mqttClient.connected()) {
     Serial.print("Attempting MQTT connection...");
     mqttClient.setBufferSize(PAYLOAD_LENGTH + 25);
     if (mqttClient.connect(node_id, MQTT_USER, MQTT_PASSWORD )) {
-      Serial.print("connected, max buffer size");
+      Serial.print("connected\nmax buffer size ");
       Serial.println(mqttClient.getBufferSize());
-      mqttClient.publish(make_topic(TOPIC_PREFIX, sizeof TOPIC_PREFIX, "/online"), "\1");
-      Serial.println(make_topic(TOPIC_PREFIX, sizeof TOPIC_PREFIX, "/online"));
-      mqttClient.subscribe(make_topic(TOPIC_PREFIX, sizeof TOPIC_PREFIX, "/image"));
+      mqttClient.publish(make_topic(topic, sizeof topic, "/online"), "\1");
+      mqttClient.subscribe(make_topic(topic, sizeof topic, "/image"));
+      Serial.print("topic "); Serial.println(topic);
     } else {
       Serial.print("failed, rc=");
       Serial.print(mqttClient.state());
