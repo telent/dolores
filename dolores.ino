@@ -61,6 +61,7 @@ void mqtt_receive_cb(char* topic, byte* payload, unsigned int length) {
   Serial.println("");
 
   set_led_values(payload, length, leds);
+  update_strip_from_leds(leds);
   digitalWrite(BUILTIN_LED, HIGH);
 }
 
