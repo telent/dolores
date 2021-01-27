@@ -55,10 +55,10 @@ void mqtt_receive_cb(char* topic, byte* payload, unsigned int length) {
   Serial.print("Message arrived [");
   Serial.print(topic);
   Serial.print("] ");
-  for (int i = 0; i < length; i++) {
-    Serial.print((int)payload[i]);
-    Serial.print(" ");
-  }
+  /* for (int i = 0; i < length; i++) { */
+  /*   Serial.print((int)payload[i]); */
+  /*   Serial.print(" "); */
+  /* } */
   Serial.println("");
 
   set_led_values(payload, length, leds);
