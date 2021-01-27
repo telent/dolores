@@ -10,6 +10,7 @@ int xy_to_index(int x, int y)
   // 15 14 13 12 11 10  9  8
   // 16 17 18 19 20 21 22 23
 
+  y = BOARD_HEIGHT - y -1;
   int base = y*BOARD_WIDTH;
   if (y%2) {
     // odd-numbered row runs right to left
@@ -48,7 +49,7 @@ struct led leds[STRIP_LENGTH];
 
 struct led * set_led_values(byte *payload, int payload_size, struct led *leds) {
   int loc = 0, x=0, y=0;
-  for(int i=0; i < STRIP_LENGTH *3; i+=3) {
+  for(int i=0; i < BOARD_WIDTH * BOARD_HEIGHT * 3; i+=3) {
     loc = xy_to_index(x,y);
     if(i + 2 < payload_size) {
       leds[loc].r = payload[i];
