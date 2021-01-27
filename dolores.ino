@@ -5,6 +5,7 @@
 #include <Adafruit_NeoPixel.h>
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
+#include <ArduinoOTA.h>
 #ifdef __AVR__
   #include <avr/power.h>
 #endif
@@ -80,7 +81,7 @@ void mqttReconnect() {
   // Loop until we're reconnected
   while (!mqttClient.connected()) {
     Serial.print("Attempting MQTT connection...");
-    mqttClient.setBufferSize(PAYLOAD_LENGTH + 25);
+    mqttClient.setBufferSize(PAYLOAD_LENGTH + 128);
     if (mqttClient.connect(node_id, MQTT_USER, MQTT_PASSWORD )) {
       Serial.print("connected\nmax buffer size ");
       Serial.println(mqttClient.getBufferSize());
@@ -105,7 +106,7 @@ void setup() {
   connect_wifi();
   set_node_id(WiFi.macAddress().c_str());
   setup_mqtt();
-
+  otaSetup();
   strip.begin();
   set_led_values(0, 0, leds);
   update_strip_from_leds(leds);
@@ -116,5 +117,6 @@ void setup() {
 void loop() {
   if(!mqttClient.loop()) mqttReconnect();
   strip.show();
+  otaLoop();
   yield();
 }

@@ -19,3 +19,5 @@ struct led * set_led_values(byte *payload, int payload_size, struct led *leds);
 char *make_topic(char *dest, int dest_bytes, const char *suffix);
 char * set_node_id(const char * mac_address);
 int xy_to_index(int x, int y);
+void otaSetup(void);
+void otaLoop(void);
