@@ -80,7 +80,7 @@ void mqttReconnect() {
   // Loop until we're reconnected
   while (!mqttClient.connected()) {
     Serial.print("Attempting MQTT connection...");
-    mqttClient.setBufferSize(PAYLOAD_LENGTH + 25);
+    mqttClient.setBufferSize(PAYLOAD_LENGTH + 128);
     if (mqttClient.connect(node_id, MQTT_USER, MQTT_PASSWORD )) {
       Serial.print("connected\nmax buffer size ");
       Serial.println(mqttClient.getBufferSize());
