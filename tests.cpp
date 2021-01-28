@@ -10,12 +10,12 @@ typedef unsigned char byte;
 
 static void test_xy_to_index()
 {
-  assert(xy_to_index(0,0)==0);
-  assert(xy_to_index(8,0)==8);
-  assert(xy_to_index(14,0)==14);
-  assert(xy_to_index(0,1)==29);
-  assert(xy_to_index(10,1)==19);
-  assert(xy_to_index(2,2)==32);
+  assert(xy_to_index(0,9)==0);
+  assert(xy_to_index(8,9)==8);
+  assert(xy_to_index(14,9)==14);
+  assert(xy_to_index(0,8)==29);
+  assert(xy_to_index(10,8)==19);
+  assert(xy_to_index(2,7)==32);
 }
 
 static void test_set_node_id()
@@ -59,16 +59,16 @@ static void test_set_led_values()
   set_led_values(payload, sizeof payload, leds);
 
   // check data in payload is copied to strip
-  assert(leds[2].r==7);
-  assert(leds[2].g==8);
-  assert(leds[2].b==9);
-  assert(leds[4].r==67);
-  assert(leds[4].g==68);
-  assert(leds[4].b==69);
+  assert(leds[xy_to_index(2,0)].r==7);
+  assert(leds[xy_to_index(2,0)].g==8);
+  assert(leds[xy_to_index(2,0)].b==9);
+  assert(leds[xy_to_index(4,0)].r==67);
+  assert(leds[xy_to_index(4,0)].g==68);
+  assert(leds[xy_to_index(4,0)].b==69);
   // if payload is smaller than led array, remaining leds are zeroed
-  assert(leds[5].r==0);
-  assert(leds[5].g==0);
-  assert(leds[5].b==0);
+  assert(leds[xy_to_index(5,0)].r==0);
+  assert(leds[xy_to_index(5,0)].g==0);
+  assert(leds[xy_to_index(5,0)].b==0);
 
   // check we limit at STRIP_LENGTH if payload is mahoosive
   int big_payload_size = sizeof (byte) * STRIP_LENGTH * 4 + 25;
