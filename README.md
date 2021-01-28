@@ -19,6 +19,11 @@ development feedback loop times.  If you have Nix, you can do
 Otherwise check `default.nix` for dependencies, install them (if there
 are any) with whatever package manager you do have, and run `make test`
 
-## Getting to the Arduino dev env
+## Building
+
+   echo "make out/dolores.ino.bin" | nix-shell . -A arduino  
+
+
+## Getting to the Arduino dev environment
 
     nix-shell . -A arduino
