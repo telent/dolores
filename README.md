@@ -1,7 +1,7 @@
 # Do Lo-res
 
 Specifically, lo-resolution images on a 10x15 matrix of Neopixels
-attached to an ESP8266. 
+attached to an ESP8266.
 
 When it starts it will send a message to the topic
 
@@ -40,7 +40,7 @@ or you might try some cli incantation approximately like this:
 
 You can build it interactively in the Arduino IDE, or you could try
 
-    echo "make out/dolores.ino.bin" | nix-shell . -A arduino  
+    echo "make out/dolores.ino.bin" | nix-shell . -A arduino
 
 An HTTP OTA function is included, so after the first flash you can run
 
@@ -49,3 +49,8 @@ An HTTP OTA function is included, so after the first flash you can run
 (substitute the IP address of your esp8266 device as appropriate)
 
 
+## Running tests
+
+There are some tests for the non-Arduino portion of the codebase.
+
+    $ nix-shell . -A test --run "make test"
