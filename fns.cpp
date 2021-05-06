@@ -68,3 +68,8 @@ struct led * set_led_values(byte *payload, int payload_size, struct led *leds) {
   }
   return leds;
 }
+
+int string_has_suffix(char *input, char * suffix) {
+  int offset = strlen(input) - strlen(suffix);
+  return (offset >= 0) && !strcmp(input + offset, suffix);
+}

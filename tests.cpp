@@ -78,9 +78,18 @@ static void test_set_led_values()
   assert(canary==0xdeadcafe);
 }
 
+static void test_string_has_suffix() {
+  assert(string_has_suffix("wombat", "bat"));
+  assert(string_has_suffix("yellow wombat", "bat"));
+  assert(!string_has_suffix("wombat", "bat1"));
+  assert(string_has_suffix("yellow wombat", ""));
+  assert(!string_has_suffix("t", "bat"));
+}
+
 int main() {
   test_xy_to_index();
   test_set_node_id();
   test_make_topic();
   test_set_led_values();
+  test_string_has_suffix();
 }

@@ -19,6 +19,8 @@
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
 
+int brightness = 50;
+
 void setup_serial() {
   Serial.begin(115200);
   while  (!Serial) {;}
@@ -54,21 +56,23 @@ void mqtt_receive_cb(char* topic, byte* payload, unsigned int length) {
   digitalWrite(BUILTIN_LED, LOW);
   Serial.print("Message arrived [");
   Serial.print(topic);
-  Serial.print("] ");
-  /* for (int i = 0; i < length; i++) { */
-  /*   Serial.print((int)payload[i]); */
-  /*   Serial.print(" "); */
-  /* } */
-  Serial.println("");
-
-  set_led_values(payload, length, leds);
-  update_strip_from_leds(leds);
-  digitalWrite(BUILTIN_LED, HIGH);
+  Serial.println("]");
+  if(string_has_suffix(topic, "image")) {
+    set_led_values(payload, length, leds);
+    update_strip_from_leds(leds);
+    digitalWrite(BUILTIN_LED, HIGH);
+  } else if(string_has_suffix(topic, "brightness")) {
+    brightness = atoi((char *)payload);
+    Serial.print("brightness = ");
+    Serial.println(brightness);
+    update_strip_from_leds(leds);
+  }
 }
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(STRIP_LENGTH, LEDS_PIN, NEO_GRB + NEO_KHZ800);
 
 void update_strip_from_leds(led *leds) {
+  strip.setBrightness(brightness);
   for(int i = 0; i< STRIP_LENGTH; i++) {
     struct led col = leds[i];
     strip.setPixelColor(i, strip.Color(col.r, col.g, col.b));
@@ -87,7 +91,7 @@ void mqttReconnect() {
       Serial.print("connected\nmax buffer size ");
       Serial.println(mqttClient.getBufferSize());
       mqttClient.publish(make_topic(topic, sizeof topic, "/online"), "\1");
-      mqttClient.subscribe(make_topic(topic, sizeof topic, "/image"));
+      mqttClient.subscribe(make_topic(topic, sizeof topic, "/#"));
       Serial.print("topic "); Serial.println(topic);
     } else {
       Serial.print("failed, rc=");

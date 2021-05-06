@@ -21,3 +21,5 @@ char * set_node_id(const char * mac_address);
 int xy_to_index(int x, int y);
 void otaSetup(void);
 void otaLoop(void);
+
+int string_has_suffix(char *input, char * suffix);
