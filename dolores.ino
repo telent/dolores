@@ -60,13 +60,16 @@ void mqtt_receive_cb(char* topic, byte* payload, unsigned int length) {
   if(string_has_suffix(topic, "image")) {
     set_led_values(payload, length, leds);
     update_strip_from_leds(leds);
-    digitalWrite(BUILTIN_LED, HIGH);
   } else if(string_has_suffix(topic, "brightness")) {
-    brightness = atoi((char *)payload);
+    char * brightness_s = (char *) alloca(length+1);
+    memcpy((void *)brightness_s, (void*) payload, length);
+    brightness_s[length] = '\0';
+    brightness = atoi(brightness_s);
     Serial.print("brightness = ");
     Serial.println(brightness);
     update_strip_from_leds(leds);
   }
+  digitalWrite(BUILTIN_LED, HIGH);
 }
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(STRIP_LENGTH, LEDS_PIN, NEO_GRB + NEO_KHZ800);
@@ -74,8 +77,12 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(STRIP_LENGTH, LEDS_PIN, NEO_GRB + NE
 void update_strip_from_leds(led *leds) {
   strip.setBrightness(brightness);
   for(int i = 0; i< STRIP_LENGTH; i++) {
-    struct led col = leds[i];
-    strip.setPixelColor(i, strip.Color(col.r, col.g, col.b));
+    if(brightness > 0) {
+      struct led col = leds[i];
+      strip.setPixelColor(i, strip.Color(col.r, col.g, col.b));
+    } else {
+      strip.setPixelColor(i, strip.Color(0,0,0));
+    }
   }
   strip.show();
 }
