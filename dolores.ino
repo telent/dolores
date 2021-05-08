@@ -97,7 +97,8 @@ void mqttReconnect() {
     if (mqttClient.connect(node_id, MQTT_USER, MQTT_PASSWORD )) {
       Serial.print("connected\nmax buffer size ");
       Serial.println(mqttClient.getBufferSize());
-      mqttClient.publish(make_topic(topic, sizeof topic, "/online"), "\1");
+      mqttClient.publish(make_topic(topic, sizeof topic, "/online"),
+			 WiFi.localIP().toString().c_str());
       mqttClient.subscribe(make_topic(topic, sizeof topic, "/#"));
       Serial.print("topic "); Serial.println(topic);
     } else {
