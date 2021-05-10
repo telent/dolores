@@ -19,8 +19,6 @@
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
 
-int brightness = 50;
-
 void setup_serial() {
   Serial.begin(115200);
   while  (!Serial) {;}
@@ -110,10 +108,11 @@ bool connect_wifi(struct wifi_settings * settings){
   return true;
 }
 
-void setup_mqtt() {
+void setup_mqtt( MQTT_CALLBACK_SIGNATURE) {
   mqttClient.setServer(MQTT_SERVER, 1883);
-  mqttClient.setCallback(mqtt_receive_cb);
+  mqttClient.setCallback(callback);
 }
+int brightness = 0;
 
 void mqtt_receive_cb(char* topic, byte* payload, unsigned int length) {
   digitalWrite(BUILTIN_LED, LOW);
@@ -150,20 +149,16 @@ void update_strip_from_leds(led *leds) {
   strip.show();
 }
 
-#define TOPIC_PREFIX "effects/"
-void mqttReconnect() {
+bool mqttReconnect(int buffer_size) {
   char topic[80];
   // Loop until we're reconnected
   while (!mqttClient.connected()) {
     Serial.print("Attempting MQTT connection...");
-    mqttClient.setBufferSize(PAYLOAD_LENGTH + 128);
+    mqttClient.setBufferSize(buffer_size);
     if (mqttClient.connect(node_id, MQTT_USER, MQTT_PASSWORD )) {
-      Serial.print("connected\nmax buffer size ");
-      Serial.println(mqttClient.getBufferSize());
       mqttClient.publish(make_topic(topic, sizeof topic, "/online"),
 			 WiFi.localIP().toString().c_str());
-      mqttClient.subscribe(make_topic(topic, sizeof topic, "/#"));
-      Serial.print("topic "); Serial.println(topic);
+      return true;
     } else {
       Serial.print("failed, rc=");
       Serial.print(mqttClient.state());
@@ -182,13 +177,15 @@ void setup() {
   connect_wifi(read_wifi_settings()) || connect_wifi(0);
   write_wifi_settings();
   set_node_id(WiFi.macAddress().c_str());
-  setup_mqtt();
+  setup_mqtt(mqtt_receive_cb);
   otaSetup();
   strip.begin();
   set_led_values(0, 0, leds);
   update_strip_from_leds(leds);
   digitalWrite(BUILTIN_LED, HIGH);
-  mqttReconnect();
+  mqttReconnect(PAYLOAD_LENGTH + 128);
+  char topic[80];
+  mqttClient.subscribe(make_topic(mqtt_topic,  topic, "/#"));
 }
 
 void loop() {
