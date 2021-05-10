@@ -70,7 +70,7 @@ void setup() {
   setup_serial();
 
   mqtt_client.setClient(connect_wifi());
-  setup_mqtt(mqtt_client, NULL);
+  setup_mqtt(mqtt_client, mqtt_receive_cb);
   mqtt_client.setBufferSize(PAYLOAD_LENGTH + 128);
 
   otaSetup();
