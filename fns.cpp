@@ -2,6 +2,10 @@
 
 #include "dolores.h"
 
+// This file is for functions that are specific to dolores (not
+// reusable arduino stuff) and that can be compiled as regular C++ on
+// the build system => tested.
+
 int xy_to_index(int x, int y)
 {
   // alternate rows are wired "backwards", thus:
@@ -18,31 +22,6 @@ int xy_to_index(int x, int y)
   } else {
     return base + x;
   }
-}
-
-char node_id[13] = "000000000000";
-
-char * set_node_id(const char * mac_address)
-{
-  unsigned int i;
-  char *p = node_id;
-  for(i=0; i < strlen(mac_address); i+=3) {
-    *p++ = mac_address[i];
-    *p++ = mac_address[i+1];
-  }
-  *p++ = '\0';
-  return node_id;
-}
-
-char *make_topic(char *dest, int dest_bytes, const char *suffix)
-{
-  int prefix_length = sizeof(MQTT_TOPIC_PREFIX) + sizeof(node_id);
-  char * topic = dest;
-  strcpy(topic, MQTT_TOPIC_PREFIX);
-  strcat(topic, node_id);
-  strncat(topic, suffix, dest_bytes - prefix_length);
-  topic[dest_bytes - 1] = '\0';
-  return topic;
 }
 
 struct led leds[STRIP_LENGTH];
@@ -67,28 +46,4 @@ struct led * set_led_values(byte *payload, int payload_size, struct led *leds) {
     }
   }
   return leds;
-}
-
-int string_has_suffix(char *input, char * suffix) {
-  int offset = strlen(input) - strlen(suffix);
-  return (offset >= 0) && !strcmp(input + offset, suffix);
-}
-
-uint32_t crc32(const uint8_t *data, size_t length ) {
-  uint32_t crc = 0xffffffff;
-  while( length-- ) {
-    uint8_t c = *data++;
-    for( uint32_t i = 0x80; i > 0; i >>= 1 ) {
-      bool bit = crc & 0x80000000;
-      if( c & i ) {
-        bit = !bit;
-      }
-
-      crc <<= 1;
-      if( bit ) {
-        crc ^= 0x04c11db7;
-      }
-    }
-  }
-  return crc;
 }

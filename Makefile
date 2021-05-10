@@ -1,6 +1,6 @@
 default: test
 
-tests: fns.o tests.o
+tests: fns.o utils.o tests.o
 test: tests
 	./tests
 

@@ -7,6 +7,7 @@ typedef unsigned char byte;
 #include <stdlib.h>
 
 #include "dolores.h"
+#include "secrets.h"
 
 static void test_xy_to_index()
 {
