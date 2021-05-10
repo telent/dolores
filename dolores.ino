@@ -10,7 +10,8 @@
 #endif
 
 #include "dolores.h"
-PubSubClient setup_mqtt(MQTT_CALLBACK_SIGNATURE);
+
+#include "network.h"
 
 #include "secrets.h"
 
@@ -67,21 +68,24 @@ void setup() {
   digitalWrite(BUILTIN_LED, LOW);
 
   setup_serial();
-  connect_wifi();
-  mqtt_client = setup_mqtt(mqtt_receive_cb);
+
+  mqtt_client.setClient(connect_wifi());
+  setup_mqtt(mqtt_client, NULL);
   mqtt_client.setBufferSize(PAYLOAD_LENGTH + 128);
+
   otaSetup();
   strip.begin();
   set_led_values(0, 0, leds);
   update_strip_from_leds(leds);
   digitalWrite(BUILTIN_LED, HIGH);
-  mqtt_reconnect();
+  mqtt_reconnect(mqtt_client);
   char topic[80];
+  Serial.println(make_topic(topic,  sizeof topic, "/#"));
   mqtt_client.subscribe(make_topic(topic,  sizeof topic, "/#"));
 }
 
 void loop() {
-  if(!mqtt_client.loop()) mqtt_reconnect();
+  if(!mqtt_client.loop()) mqtt_reconnect(mqtt_client);
   strip.show();
   otaLoop();
   yield();

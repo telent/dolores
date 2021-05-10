@@ -2,11 +2,11 @@
 #include <PubSubClient.h>
 #include <ArduinoOTA.h>
 
-#include "dolores.h"
 #include "secrets.h"
+#include "network.h"
 
-WiFiClient espClient;
-static PubSubClient mqttClient(espClient);
+static WiFiClient espClient;
+
 // https://www.bakke.online/index.php/2017/06/24/esp8266-wifi-power-reduction-avoiding-network-scan/
 
 // The ESP8266 RTC memory is arranged into blocks of 4 bytes. The
@@ -90,23 +90,23 @@ static bool attempt_wifi_connect(struct wifi_settings * settings){
   return true;
 }
 
-void connect_wifi() {
+WiFiClient& connect_wifi() {
   attempt_wifi_connect(read_wifi_settings()) || attempt_wifi_connect(0);
   write_wifi_settings();
+  return espClient;
 }
 
-PubSubClient setup_mqtt(MQTT_CALLBACK_SIGNATURE) {
+void setup_mqtt(PubSubClient& mqttClient, MQTT_CALLBACK_SIGNATURE) {
   set_node_id(WiFi.macAddress().c_str());
   mqttClient.setServer(MQTT_SERVER, 1883);
-  mqttClient.setCallback(callback);
-  return mqttClient;
+  if(callback) mqttClient.setCallback(callback);
 }
 
-bool mqtt_reconnect() {
+bool mqtt_reconnect(PubSubClient& mqttClient) {
   char topic[80];
   // Loop until we're reconnected
   while (!mqttClient.connected()) {
-    Serial.print("Attempting MQTT connection...");
+    Serial.println("Attempting MQTT connection");
     if (mqttClient.connect(node_id, MQTT_USER, MQTT_PASSWORD )) {
       mqttClient.publish(make_topic(topic, sizeof topic, "/online"),
 			 WiFi.localIP().toString().c_str());

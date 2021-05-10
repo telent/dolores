@@ -6,7 +6,10 @@ typedef unsigned char byte;
 #include <string.h>
 #include <stdlib.h>
 
+#define ON_HOST
+
 #include "dolores.h"
+#include "network.h"
 #include "secrets.h"
 
 static void test_xy_to_index()
