@@ -50,7 +50,7 @@ static void write_wifi_settings() {
   }
 }
 
-bool attempt_wifi_connect(struct wifi_settings * settings){
+static bool attempt_wifi_connect(struct wifi_settings * settings){
   delay(10);
 
   Serial.print("Connecting to ");
@@ -102,12 +102,11 @@ PubSubClient setup_mqtt(MQTT_CALLBACK_SIGNATURE) {
   return mqttClient;
 }
 
-bool mqtt_reconnect(int buffer_size) {
+bool mqtt_reconnect() {
   char topic[80];
   // Loop until we're reconnected
   while (!mqttClient.connected()) {
     Serial.print("Attempting MQTT connection...");
-    mqttClient.setBufferSize(buffer_size);
     if (mqttClient.connect(node_id, MQTT_USER, MQTT_PASSWORD )) {
       mqttClient.publish(make_topic(topic, sizeof topic, "/online"),
 			 WiFi.localIP().toString().c_str());

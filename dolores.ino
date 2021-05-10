@@ -69,18 +69,19 @@ void setup() {
   setup_serial();
   connect_wifi();
   mqtt_client = setup_mqtt(mqtt_receive_cb);
+  mqtt_client.setBufferSize(PAYLOAD_LENGTH + 128);
   otaSetup();
   strip.begin();
   set_led_values(0, 0, leds);
   update_strip_from_leds(leds);
   digitalWrite(BUILTIN_LED, HIGH);
-  mqtt_reconnect(PAYLOAD_LENGTH + 128);
+  mqtt_reconnect();
   char topic[80];
   mqtt_client.subscribe(make_topic(topic,  sizeof topic, "/#"));
 }
 
 void loop() {
-  if(!mqtt_client.loop()) mqtt_reconnect(PAYLOAD_LENGTH + 128);
+  if(!mqtt_client.loop()) mqtt_reconnect();
   strip.show();
   otaLoop();
   yield();

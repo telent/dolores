@@ -25,4 +25,4 @@ int string_has_suffix(char *input, char * suffix);
 uint32_t crc32(const uint8_t *data, size_t length);
 
 void connect_wifi();
-bool mqtt_reconnect(int buffer_size);
+bool mqtt_reconnect();
