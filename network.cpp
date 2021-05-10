@@ -6,7 +6,7 @@
 #include "secrets.h"
 
 WiFiClient espClient;
-PubSubClient mqttClient(espClient);
+static PubSubClient mqttClient(espClient);
 // https://www.bakke.online/index.php/2017/06/24/esp8266-wifi-power-reduction-avoiding-network-scan/
 
 // The ESP8266 RTC memory is arranged into blocks of 4 bytes. The
