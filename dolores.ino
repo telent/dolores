@@ -60,7 +60,7 @@ static void write_wifi_settings() {
   uint32_t previous_crc = wifi_settings.crc32;
   // Write current connection info back to RTC
   wifi_settings.channel = WiFi.channel();
-  memcpy(wifi_settings.bssid, WiFi.BSSID(), 6); 
+  memcpy(wifi_settings.bssid, WiFi.BSSID(), 6);
   wifi_settings.crc32 = crc32(((uint8_t*) &wifi_settings) + 4,
 			      (sizeof wifi_settings) - 4);
   if(wifi_settings.crc32 != previous_crc) {
@@ -102,7 +102,7 @@ bool connect_wifi(struct wifi_settings * settings){
     delay(50);
     Serial.print(".");
   }
-  
+
   Serial.println("");
   Serial.println("WiFi connected");
   Serial.println("IP address: ");
