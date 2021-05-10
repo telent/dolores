@@ -149,7 +149,7 @@ void update_strip_from_leds(led *leds) {
   strip.show();
 }
 
-bool mqttReconnect(int buffer_size) {
+bool mqtt_reconnect(int buffer_size) {
   char topic[80];
   // Loop until we're reconnected
   while (!mqttClient.connected()) {
@@ -183,7 +183,7 @@ void setup() {
   set_led_values(0, 0, leds);
   update_strip_from_leds(leds);
   digitalWrite(BUILTIN_LED, HIGH);
-  mqttReconnect(PAYLOAD_LENGTH + 128);
+  mqtt_reconnect(PAYLOAD_LENGTH + 128);
   char topic[80];
   mqttClient.subscribe(make_topic(mqtt_topic,  topic, "/#"));
 }
